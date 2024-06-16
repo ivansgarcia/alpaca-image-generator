@@ -1,11 +1,40 @@
 'use client';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 import Part from './components/Part';
-import Option from "./components/Option";
-import AlpacaImage from "./components/AlpacaImage";
+import Option from './components/Option';
+import AlpacaImage from './components/AlpacaImage';
+
+const reducer = (state, action) => {
+    if (action.type === 'change_part') {
+        return {
+            ...state,
+            hair: action.hair,
+            ears: action.ears,
+            eyes: action.eyes,
+            mouth: action.mouth,
+            neck: action.neck,
+            leg: action.leg,
+            accesorie: action.accesorie,
+            background: action.background,
+        };
+    }
+    throw Error('Unknown action.');
+};
+
+const initialState = {
+    hair: 'default',
+    ears: 'default',
+    eyes: 'default',
+    mouth: 'default',
+    neck: 'default',
+    leg: 'default',
+    accesorie: '',
+    background: 'blue50',
+};
 
 export default function Home() {
+    const [state, dispatch] = useReducer(reducer, initialState);
     const parts = [
         'Hair',
         'Ears',
@@ -13,7 +42,7 @@ export default function Home() {
         'Mouth',
         'Neck',
         'Leg',
-        'Accesories',
+        'Accesorie',
         'Background',
     ];
     const options = {
@@ -38,7 +67,7 @@ export default function Home() {
             'tilt-backward',
             'tilt-forward',
         ],
-        accesories: ['', 'earings', 'flower', 'glasses', 'headphone'],
+        accesorie: ['', 'earings', 'flower', 'glasses', 'headphone'],
         background: [
             'blue50',
             'blue60',
@@ -63,45 +92,44 @@ export default function Home() {
 
     const [selectedPart, setSelectedPart] = useState('hair');
 
-    const [hair, setHair] = useState('default');
-    const [ears, setEars] = useState('default');
-    const [eyes, setEyes] = useState('default');
-    const [mouth, setMouth] = useState('default');
-    const [neck, setNeck] = useState('default');
-    const [leg, setLeg] = useState('default');
-    const [accesorie, setAccesorie] = useState();
-    const [background, setBackground] = useState('blue50');
-
     return (
-        <main>
-            <h1>ALPACA GENERATOR</h1>
-            <section className="flex">
-                <div className="w-80 h-80 relative">
-                    <AlpacaImage hair={hair} ears={ears} eyes={eyes} mouth={mouth} neck={neck} leg={leg} accesorie={accesorie} background={background}/>
+        <main className="p-8 bg-slate-50">
+            <h1 className="text-4xl font-bold my-8">ALPACA GENERATOR</h1>
+            <section className="flex gap-16">
+                <div className="relative">
+                    <AlpacaImage state={state} />
+                </div>
+                <div className="flex flex-col">
+                        <h2 className="self-start font-bold">ACCESORIZE THE ALPACAS</h2>
+                        <ul className="flex flex-wrap gap-2 my-2">
+                            {parts.map((part, index) => (
+                                <Part
+                                    key={index}
+                                    name={part}
+                                    selectedPart={selectedPart}
+                                    setSelectedPart={setSelectedPart}
+                                />
+                            ))}
+                        </ul>
+                    <div>
+                        <h2 className="font-bold self-start">STYLE</h2>
+                        <ul className="flex flex-wrap gap-2 my-2">
+                            {options[selectedPart].map((option, index) => (
+                                <Option
+                                    key={index}
+                                    state={state}
+                                    name={option}
+                                    dispatch={dispatch}
+                                    selectedPart={selectedPart}
+                                />
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             </section>
-            <section>
-                <div>
-                    <h2>ACCESORIZE THE ALPACAS</h2>
-                    {parts.map((part, index) => (
-                        <Part
-                            key={index}
-                            name={part}
-                            selectedPart={selectedPart}
-                            setSelectedPart={setSelectedPart}
-                        />
-                    ))}
-                </div>
-                <div>
-                    <h2>STYLE</h2>
-                    {options[selectedPart].map((option, index) => (
-                        <Option key={index} name={option} />
-                    ))}
-                </div>
-            </section>
-            <section className="flex">
-                <button>Random</button>
-                <button>Download</button>
+            <section className="flex py-4">
+                <button className="px-6 py-2 bg-white font-bold rounded">Random</button>
+                <button className="px-6 py-2 bg-white font-bold rounded">Download</button>
             </section>
         </main>
     );
