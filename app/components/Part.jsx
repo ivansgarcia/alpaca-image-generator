@@ -1,13 +1,15 @@
-import React from 'react'
+import React from 'react';
 
-const Part = ({name, selectedPart, setSelectedPart}) => {
-    const isSelected = name.toLowerCase() === selectedPart;    
+const Part = ({ name, selectedPart, setSelectedPart }) => {
+    const isSelected = name === selectedPart;
     return (
         <li
-            onClick={() => setSelectedPart(name.toLowerCase())}
-            className={`rounded-full px-6 py-2 border border-blue-400 text-blue-400 text-center ${isSelected && 'bg-blue-800 text-white border-blue-800'}`}
-        >{name}</li>
-    )
-}
+            onClick={() => setSelectedPart(name)}
+            className={`rounded-full border px-8 py-2 text-center ${isSelected ? 'cursor-default border-blue-800 bg-blue-800 text-white' : 'cursor-pointer border-blue-400 text-blue-400'}`}
+        >
+            {name[0].toUpperCase() + name.substring(1)}
+        </li>
+    );
+};
 
-export default Part
+export default Part;
