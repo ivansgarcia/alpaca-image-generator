@@ -5,7 +5,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
     title: 'Alpaca avatar generator',
-    description: 'Generate your alpaca avatar and download it',
+    description: 'Generate your alpaca avatar and download it as image',
 };
 
 export default function RootLayout({ children }) {
